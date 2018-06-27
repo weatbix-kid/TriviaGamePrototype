@@ -29,7 +29,7 @@ namespace DictionaryTestApp
         {
             try
             {
-                RootObject currentResult = await TestServiceClient.GetRootObject(prWord);
+                RootObject currentResult = await ServiceClient.GetRootObject(prWord);
                 Console.WriteLine();
                 Console.WriteLine("Word: " + currentResult.results[0].word);
                 Console.WriteLine("Number of Definitions: " + currentResult.results[0].lexicalEntries[0].entries[0].senses.Count);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DictionaryTestApp
 {
-    class TestServiceClient
+    class ServiceClient
     {
         internal async static Task<RootObject> GetRootObject(string prWord)
         {
