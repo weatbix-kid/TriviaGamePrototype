@@ -15,9 +15,7 @@ namespace DictionaryTestApp
             using (HttpClient lcHttpClient = new HttpClient()) {
 
                 lcHttpClient.BaseAddress = new Uri("https://od-api.oxforddictionaries.com:443/api/v1/entries/en/");
-
-                foreach (var item in APIKeys.KeyDetails)
-                    lcHttpClient.DefaultRequestHeaders.Add(item.Key, item.Value);
+                lcHttpClient.DefaultRequestHeaders.Add(APIKeys.app_id, APIKeys.app_key);
 
                 return JsonConvert.DeserializeObject<RootObject> (await lcHttpClient.GetStringAsync(
                     lcHttpClient.BaseAddress + prWord.ToLower()
