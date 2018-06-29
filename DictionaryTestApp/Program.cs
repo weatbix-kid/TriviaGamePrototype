@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Net;
 using System.IO;
-using System.Text;
-using System.Diagnostics;
+
 
 namespace DictionaryTestApp
 {
@@ -22,10 +18,10 @@ namespace DictionaryTestApp
         static void Initiate()
         {
             // Retrieve word list
-            words = File.ReadAllLines(@"C:\Users\WILLIES\Desktop\words.txt");
+            words = File.ReadAllLines("words.txt");
 
             // Simple Menu
-            Console.WriteLine("0- Definition by typed word \n1- Definition by random word");
+            Console.WriteLine("0- Definition by typed word \n1- Definition by random word \n2- Prototype Round: Phrase \n3- Prototype Round: Spellingbee \n4- Prototype Round: Opposite \n5- Prototype Round: Classic");
             int character = Convert.ToInt16(Console.ReadLine());
 
             switch (character)
@@ -37,6 +33,23 @@ namespace DictionaryTestApp
                 case 1:
                     DefinitionByRandomWord();
                     break;
+
+                case 2:
+                    RoundGuessFromPhrase();
+                    break;
+
+                case 3:
+                    RoundSpellingBee();
+                    break;
+
+                case 4:
+                    RoundGuessTheAnatonym();
+                    break;
+
+                case 5:
+                    RoundClassic();
+                    break;
+
             }
         }
 
@@ -58,6 +71,34 @@ namespace DictionaryTestApp
             Console.WriteLine(string.Format("Definition of {0}:", words[randomNumber]));
             GetDefinitionByRootObjectAsync(words[randomNumber]).Wait();
             Initiate();
+        }
+
+        static void RoundGuessFromPhrase()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Guess the word from the headword/phrase");
+            Console.ReadLine();
+        }
+
+        static void RoundSpellingBee()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Spell the word the word by sound");
+            Console.ReadLine();
+        }
+
+        static void RoundGuessTheAnatonym()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Guess the opposite");
+            Console.ReadLine();
+        }
+
+        static void RoundClassic()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Guess from top definition");
+            Console.ReadLine();
         }
 
         static async Task GetDefinitionByRootObjectAsync(string prWord)
