@@ -23,5 +23,20 @@ namespace DictionaryTestApp
                     ));
             }
         }
+
+        internal async static Task<HeadwordRootObj> GetHeadwordRootObject(string prWord)
+        {
+            using (HttpClient lcHttpClient = new HttpClient())
+            {
+
+                lcHttpClient.BaseAddress = new Uri("https://od-api.oxforddictionaries.com:443/api/v1/search/en");
+                lcHttpClient.DefaultRequestHeaders.Add("app_id", APIKeys.app_id);
+                lcHttpClient.DefaultRequestHeaders.Add("app_key", APIKeys.app_key);
+
+                return JsonConvert.DeserializeObject<HeadwordRootObj>(await lcHttpClient.GetStringAsync(
+                    lcHttpClient.BaseAddress + "?q=" + prWord.ToLower() + "&prefix=false"
+                    ));
+            }
+        }
     }
 }

@@ -50,6 +50,10 @@ namespace DictionaryTestApp
                     RoundClassic();
                     break;
 
+                default:
+                    Initiate();
+                    break;
+
             }
         }
 
@@ -77,6 +81,15 @@ namespace DictionaryTestApp
         {
             Console.WriteLine("");
             Console.WriteLine("Guess the word from the headword/phrase");
+
+            // string[] randomWord = new string[] { "stranger", "cat", "dinosaur", "person" };
+            // 
+            // Random r = new Random();
+            // int randomNumber = r.Next(0, 3);
+            // 
+            // GetPhraseByHeadwordRootObjectAsync(randomWord[randomNumber]).Wait();
+
+            GetPhraseByHeadwordRootObjectAsync("stranger").Wait();
             Console.ReadLine();
         }
 
@@ -114,6 +127,31 @@ namespace DictionaryTestApp
                     Console.WriteLine(string.Format("- {0}", currentResult.results[0].lexicalEntries[0].entries[0].senses[i].definitions[0]));
                 }
                 Console.WriteLine("");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("");
+            }
+        }
+
+        static async Task GetPhraseByHeadwordRootObjectAsync(string prWord)
+        {
+            try
+            {
+                HeadwordRootObj currentResult = await ServiceClient.GetHeadwordRootObject(prWord);
+                Console.WriteLine();
+                Console.WriteLine("Results: " + currentResult.metadata.total);
+                foreach (var result in currentResult.results)
+                {
+                    if (result.matchType == "headword")
+                    {
+                        Console.WriteLine(result.word);
+                    }
+
+                    // Foreach result build a new string that sensors the original word
+
+                }
             }
             catch (Exception ex)
             {
