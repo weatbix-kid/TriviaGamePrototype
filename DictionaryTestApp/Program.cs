@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using System.Text;
 
 
 namespace DictionaryTestApp
@@ -82,15 +83,24 @@ namespace DictionaryTestApp
             Console.WriteLine("");
             Console.WriteLine("Guess the word from the headword/phrase");
 
-            // string[] randomWord = new string[] { "stranger", "cat", "dinosaur", "person" };
-            // 
-            // Random r = new Random();
-            // int randomNumber = r.Next(0, 3);
-            // 
-            // GetPhraseByHeadwordRootObjectAsync(randomWord[randomNumber]).Wait();
+            string[] randomWord = new string[] { "stranger", "cat", "dinosaur", "person" };
+            
+            Random r = new Random();
+            int randomNumber = r.Next(0, 3);
+            
+            GetPhraseByHeadwordRootObjectAsync(randomWord[randomNumber]).Wait();
 
-            GetPhraseByHeadwordRootObjectAsync("stranger").Wait();
+            Console.WriteLine("");
+            Console.WriteLine("Guess the word");
+            string userInput = Console.ReadLine();
+
+            if (userInput == randomWord[randomNumber])
+                Console.WriteLine("Correct!");
+            else
+                Console.WriteLine("False :(");
+
             Console.ReadLine();
+            Initiate();
         }
 
         static void RoundSpellingBee()
@@ -139,18 +149,22 @@ namespace DictionaryTestApp
         {
             try
             {
-                HeadwordRootObj currentResult = await ServiceClient.GetHeadwordRootObject(prWord);
+                HeadwordRootObj request = await ServiceClient.GetHeadwordRootObject(prWord);
                 Console.WriteLine();
-                Console.WriteLine("Results: " + currentResult.metadata.total);
-                foreach (var result in currentResult.results)
+
+                StringBuilder censoredWord = new StringBuilder();
+                foreach (char character in prWord)
+                    censoredWord.Append("_ ");
+
+                Console.WriteLine("Results: " + request.metadata.total);
+
+                foreach (var result in request.results)
                 {
+                    StringBuilder phrase = new StringBuilder(result.word);
                     if (result.matchType == "headword")
-                    {
-                        Console.WriteLine(result.word);
-                    }
-
-                    // Foreach result build a new string that sensors the original word
-
+                        phrase.Replace(prWord, Convert.ToString(censoredWord));
+                    if (Convert.ToString(phrase) != prWord)
+                        Console.WriteLine(phrase);
                 }
             }
             catch (Exception ex)
