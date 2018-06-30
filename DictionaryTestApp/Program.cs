@@ -57,7 +57,6 @@ namespace DictionaryTestApp
 
             }
         }
-
         static void DefinitionByWord()
         {
             Console.WriteLine("");
@@ -114,7 +113,25 @@ namespace DictionaryTestApp
         {
             Console.WriteLine("");
             Console.WriteLine("Guess the opposite");
+
+            string[] randomWord = new string[] { "confused", "sad", "cold", "angry" };
+
+            Random r = new Random();
+            int randomNumber = r.Next(0, 3);
+
+            GetAntonymByRootObjectAsync(randomWord[randomNumber]).Wait();
+
+            Console.WriteLine("");
+            Console.WriteLine("Guess the word");
+            string userInput = Console.ReadLine();
+
+            if (userInput == randomWord[randomNumber])
+                Console.WriteLine("Correct!");
+            else
+                Console.WriteLine("False :(");
+
             Console.ReadLine();
+            Initiate();
         }
 
         static void RoundClassic()
@@ -128,13 +145,13 @@ namespace DictionaryTestApp
         {
             try
             {
-                RootObject currentResult = await ServiceClient.GetRootObject(prWord);
+                RootObject request = await ServiceClient.GetRootObject(prWord);
                 Console.WriteLine();
-                Console.WriteLine("Word: " + currentResult.results[0].word);
-                Console.WriteLine("Number of Definitions: " + currentResult.results[0].lexicalEntries[0].entries[0].senses.Count);
-                for (int i = 0; i < currentResult.results[0].lexicalEntries[0].entries[0].senses.Count; i++)
+                Console.WriteLine("Word: " + request.results[0].word);
+                Console.WriteLine("Number of Definitions: " + request.results[0].lexicalEntries[0].entries[0].senses.Count);
+                for (int i = 0; i < request.results[0].lexicalEntries[0].entries[0].senses.Count; i++)
                 {
-                    Console.WriteLine(string.Format("- {0}", currentResult.results[0].lexicalEntries[0].entries[0].senses[i].definitions[0]));
+                    Console.WriteLine(string.Format("- {0}", request.results[0].lexicalEntries[0].entries[0].senses[i].definitions[0]));
                 }
                 Console.WriteLine("");
             }
@@ -166,6 +183,25 @@ namespace DictionaryTestApp
                     if (Convert.ToString(phrase) != prWord)
                         Console.WriteLine(phrase);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("");
+            }
+        }
+
+        static async Task GetAntonymByRootObjectAsync(string prWord)
+        {
+            try
+            { 
+                AntonymRootObj request = await ServiceClient.GetAntonymRootObject(prWord);
+                Console.WriteLine();
+                foreach (var antonym in request.results[0].lexicalEntries[0].entries[0].senses[0].antonyms)
+                {
+                    Console.WriteLine(antonym.text);
+                }
+                Console.WriteLine("");
             }
             catch (Exception ex)
             {

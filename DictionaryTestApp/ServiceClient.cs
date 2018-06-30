@@ -38,5 +38,20 @@ namespace DictionaryTestApp
                     ));
             }
         }
+
+        internal async static Task<AntonymRootObj> GetAntonymRootObject(string prWord)
+        {
+            using (HttpClient lcHttpClient = new HttpClient())
+            {
+
+                lcHttpClient.BaseAddress = new Uri("https://od-api.oxforddictionaries.com:443/api/v1/entries/en/");
+                lcHttpClient.DefaultRequestHeaders.Add("app_id", APIKeys.app_id);
+                lcHttpClient.DefaultRequestHeaders.Add("app_key", APIKeys.app_key);
+
+                return JsonConvert.DeserializeObject<AntonymRootObj>(await lcHttpClient.GetStringAsync(
+                    lcHttpClient.BaseAddress + prWord.ToLower() + "/antonyms"
+                    ));
+            }
+        }
     }
 }
